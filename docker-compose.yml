@@ -1,0 +1,25 @@
+services:
+  # GPU: база ml-base (RTX 5060, CUDA 12.8)
+  gpu:
+    image: ml-base:cuda12.8
+    container_name: human-detection-gpu
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - uv-cache:/root/.cache/uv
+      - venv-gpu:/workspace/.venv
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    stdin_open: true
+    tty: true
+    command: bash
+
+volumes:
+  uv-cache:
+    external: true
+  venv-gpu:
